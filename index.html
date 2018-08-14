@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>optimize</title>
+    <style>
+        #fps {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <br>
+    fps: <span id="fps">0</span>
+    <br>
+    <!-- 展示渲染方式 -->
+    <p class='render-type'>非离屏渲染</p>
+    <!-- 展示在离屏方式下是否多实例 -->
+    <span class="is-instance"></span>
+
+    <!-- 控制数量 -->
+    <br>
+    粒子数量：<input type="range" max="9999" min="100" step="100" value="1000" oninput="changeAmount()">
+    <span class="amount">1000</span>
+    <br>
+    <button onclick="changeRender()">修改渲染方式</button>
+    <button onclick="toggleMultInstance()">离屏渲染单/多实例</button>
+
+    <script src="js/particle.js"></script>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let particle = new Scene(canvas);
+
+        // 修改粒子个数
+        function changeAmount() {
+            let amount = document.getElementsByClassName('amount')[0];
+            let value = event.target.value;
+
+            amount.innerHTML = value;
+
+            particle.updateAmount(value);
+        }
+
+        let renderTypeDom = document.getElementsByClassName('render-type')[0];
+        let instanceDom = document.getElementsByClassName('is-instance')[0];
+
+        // 修改渲染方式
+        function changeRender() {
+            if(renderTypeDom.innerHTML == "非离屏渲染") {
+                renderTypeDom.innerHTML = "离屏渲染";
+                particle.useMultInstance == true ? instanceDom.innerHTML = "多实例" : instanceDom.innerHTML = "单实例"
+            } else {
+                renderTypeDom.innerHTML = "非离屏渲染";
+                instanceDom.innerHTML = "";
+            }
+            particle.toggleRender();
+        }
+
+        // 切换单/多实例
+        function toggleMultInstance() {
+
+            let canToggle = particle.toggleMultInstance();
+            if (canToggle) {
+                particle.useMultInstance == true ? instanceDom.innerHTML = "多实例" : instanceDom.innerHTML = "单实例";
+            } else {
+                instanceDom.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+
+</html>
